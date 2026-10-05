@@ -1,0 +1,27 @@
+# Publish only the application, documentation and build configuration.
+/*
+!/.gitignore
+!/.gitattributes
+!/README.md
+!/START-MAPPLOY.md
+!/start-mapploy.sh
+!/.github/
+!/backend/
+!/prototype/
+!/scripts/
+!/docs/
+
+**/node_modules/
+**/target/
+**/data/
+**/*.log
+**/.env
+**/.env.*
+!**/.env.example
+**/*.pem
+**/*.key
+**/.DS_Store
+**/Thumbs.db
+/backend/start1.ps1
+/backend/start.sh
+/prototype/evaluation/

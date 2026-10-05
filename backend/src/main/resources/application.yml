@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: Mapploy Backend
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5433/mapploy}
+    username: ${DATABASE_USERNAME:mapploy}
+    password: ${DATABASE_PASSWORD:mapploy}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+  ai:
+    ollama:
+      base-url: ${OLLAMA_BASE_URL:http://127.0.0.1:11434}
+      chat:
+        options:
+          model: ${OLLAMA_MODEL:gemma3:4b}
+          temperature: 0
+          num-ctx: 4096
+
+server:
+  address: ${SERVER_ADDRESS:127.0.0.1}
+  port: ${PORT:8081}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+mapploy:
+  sync:
+    enabled: ${SYNC_ENABLED:true}
+    on-startup: ${SYNC_ON_STARTUP:true}
+    interval-ms: ${SYNC_INTERVAL_MS:86400000}
+  ollama:
+    base-url: ${OLLAMA_BASE_URL:http://127.0.0.1:11434}
+    model: ${OLLAMA_MODEL:gemma3:4b}

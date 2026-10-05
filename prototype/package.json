@@ -1,0 +1,17 @@
+{
+  "name": "mapploy-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "check": "node --check server.mjs && node --check public/app.js && node --check scripts/evaluate.mjs",
+    "evaluate": "node scripts/evaluate.mjs"
+  },
+  "dependencies": {
+    "maplibre-gl": "6.9.0"
+  }
+}

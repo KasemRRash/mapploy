@@ -1,0 +1,19 @@
+Alex Example
+alex@example.test | +49 170 12345678
+
+Professional Summary
+Backend developer focused on maintainable business applications and clear collaboration.
+
+Work Experience
+Software Developer, Example GmbH | 2022 - 2025
+Built Java and Spring Boot REST services with PostgreSQL and Git.
+Improved processing time by 35% for 500 internal users.
+
+Education
+Bachelor of Science in Computer Science, Example University | 2018 - 2022
+
+Skills
+Java, Spring Boot, PostgreSQL, REST, Git, Docker
+
+Languages
+English C1, German B2

@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A local, evidence-grounded job map for current vacancies matched to your interests."
+    />
+    <title>Mapploy</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/vendor/maplibre-gl.css" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Mapploy home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 36 36" role="img">
+            <path d="M18 3.5c-6.1 0-11 4.8-11 10.8 0 8.1 11 18.2 11 18.2s11-10.1 11-18.2c0-6-4.9-10.8-11-10.8Z" />
+            <path d="m13.5 14.3 3 3.1 6.2-6.4" />
+          </svg>
+        </span>
+        <span>
+          <strong>Mapploy</strong>
+          <small>LOCAL REALITY CHECK</small>
+        </span>
+      </a>
+
+      <div class="source-health" aria-live="polite">
+        <span class="pulse-dot" aria-hidden="true"></span>
+        <span id="sourceHealthText">Connecting to official feeds…</span>
+      </div>
+
+      <div class="header-actions">
+        <div class="model-status" id="modelStatus" title="Local AI status">
+          <span class="model-icon" aria-hidden="true">AI</span>
+          <span>Checking Ollama…</span>
+        </div>
+        <button class="button cv-button" id="cvButton" type="button" aria-label="Upload and review CV">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7Z"/><path d="M14 2v5h5M12 18v-6M9.5 14.5 12 12l2.5 2.5"/></svg>
+          CV check
+        </button>
+        <button class="button interest-button" id="interestButton" type="button" aria-label="Change job interests">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-8-4.6-8-11a4.5 4.5 0 0 1 8-2.7A4.5 4.5 0 0 1 20 10c0 6.4-8 11-8 11Z" /></svg>
+          Interests
+        </button>
+        <button class="button button-secondary" id="syncButton" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 4v5h5M4 13a8.1 8.1 0 0 0 15.5 2M20 20v-5h-5" /></svg>
+          Refresh feeds
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="results-panel" aria-label="Current vacancies">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">CURRENT VACANCIES</p>
+            <h1><span id="resultCount">0</span> verified listings</h1>
+          </div>
+          <span class="freshness" id="freshnessLabel">Not checked yet</span>
+        </div>
+
+        <form class="filters" id="filterForm" autocomplete="off">
+          <label class="search-field">
+            <span class="sr-only">Search vacancies</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
+            <input id="searchInput" type="search" placeholder="Role, skill or company" />
+            <kbd>/</kbd>
+          </label>
+          <div class="filter-row">
+            <label>
+              <span class="sr-only">Location</span>
+              <select id="locationFilter">
+                <option value="all">All locations</option>
+                <option value="Bremen">Bremen</option>
+                <option value="Hamburg">Hamburg</option>
+              </select>
+            </label>
+            <label>
+              <span class="sr-only">Analysis state</span>
+              <select id="analysisFilter">
+                <option value="all">All analyses</option>
+                <option value="local-ai">Local AI reviewed</option>
+                <option value="rules">Rule baseline</option>
+              </select>
+            </label>
+          </div>
+          <button class="interest-summary" id="interestSummary" type="button">All job interests</button>
+        </form>
+
+        <div class="result-list" id="resultList" role="list" aria-live="polite">
+          <div class="loading-card"><span></span><span></span><span></span></div>
+          <div class="loading-card"><span></span><span></span><span></span></div>
+        </div>
+      </section>
+
+      <section class="map-panel" aria-label="Vacancy map">
+        <div class="map-toolbar">
+          <div>
+            <p class="eyebrow">GEOGRAPHIC OVERVIEW</p>
+            <strong id="mapSummary">Bremen–Hamburg region</strong>
+          </div>
+          <div class="map-toolbar-actions">
+            <button
+              class="map-view-toggle"
+              id="map3dToggle"
+              type="button"
+              aria-pressed="false"
+              aria-label="Switch to 3D building view"
+              title="Show OpenStreetMap buildings in 3D near the selected job"
+              disabled
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 4.5-8 4.5-8-4.5L12 3Z"/><path d="m4 7.5 8 4.5 8-4.5M4 12l8 4.5 8-4.5M4 16.5l8 4.5 8-4.5"/></svg>
+              <span id="mapViewLabel">3D</span>
+            </button>
+            <div class="map-legend" aria-label="Map legend">
+              <span><i class="legend-dot open"></i>Open</span>
+              <span><i class="legend-dot applied"></i>Applied</span>
+              <span><i class="legend-dot clarify"></i>Clarify</span>
+              <span><i class="legend-dot skipped"></i>Skipped</span>
+            </div>
+          </div>
+        </div>
+        <div id="map" class="map" aria-label="Interactive map of current vacancies"></div>
+        <div class="map-attribution-note">Locations are approximate and cached for this prototype.</div>
+      </section>
+
+      <aside class="detail-panel" id="detailPanel" aria-label="Vacancy evidence report">
+        <div class="empty-detail" id="emptyDetail">
+          <span class="empty-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48"><path d="M21 38a17 17 0 1 1 17-17" /><path d="m33 33 11 11M15 19h12M15 25h8" /></svg>
+          </span>
+          <h2>Select a vacancy</h2>
+          <p>Open a listing to inspect requirements, missing information and exact evidence from the employer.</p>
+        </div>
+        <div id="detailContent" hidden></div>
+      </aside>
+    </main>
+
+    <div class="interest-overlay" id="interestOverlay" hidden>
+      <section class="interest-dialog" role="dialog" aria-modal="true" aria-labelledby="interestTitle" aria-describedby="interestDescription">
+        <div class="interest-dialog-heading">
+          <p class="eyebrow">PERSONALISE YOUR MAP</p>
+          <h2 id="interestTitle">What kind of work are you looking for?</h2>
+          <p id="interestDescription">Choose one or more interests. Mapploy will show the matching vacancies from all connected companies.</p>
+        </div>
+        <div class="interest-options" id="interestOptions"></div>
+        <div class="interest-actions">
+          <button class="button all-roles-button" id="allRolesButton" type="button">Explore all roles</button>
+          <button class="button button-primary save-interests-button" id="saveInterestsButton" type="button">Show matching jobs</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="cv-overlay" id="cvOverlay" hidden>
+      <section class="cv-dialog" role="dialog" aria-modal="true" aria-labelledby="cvTitle" aria-describedby="cvDescription">
+        <button class="cv-close" id="cvCloseButton" type="button" aria-label="Close CV review">×</button>
+        <header class="cv-dialog-heading">
+          <div>
+            <p class="eyebrow">PRIVATE CAREER TOOL</p>
+            <h2 id="cvTitle">Check your CV locally</h2>
+            <p id="cvDescription">Get a transparent completeness checklist and compare your CV with the selected vacancy.</p>
+          </div>
+          <span class="privacy-pill"><i></i>Local · not stored</span>
+        </header>
+
+        <div class="cv-setup" id="cvSetup">
+          <div class="cv-context" id="cvContext">
+            <span class="cv-context-icon" aria-hidden="true">↗</span>
+            <span id="cvContextText">General CV review</span>
+          </div>
+          <label class="cv-dropzone" id="cvDropzone" for="cvFileInput" tabindex="0">
+            <input id="cvFileInput" type="file" accept=".pdf,.doc,.docx,.txt,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" hidden />
+            <span class="cv-upload-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 16V4M8 8l4-4 4 4M5 14v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5"/></svg>
+            </span>
+            <strong>Drop your CV here or choose a file</strong>
+            <small>PDF, DOC, DOCX or TXT · maximum 5 MB</small>
+            <span class="cv-file-name" id="cvFileName">No file selected</span>
+          </label>
+          <div class="cv-privacy-note">
+            <strong>Your document stays private.</strong>
+            <span>The file is read by your local Spring Boot backend and local Ollama model. Mapploy does not add it to the job database.</span>
+          </div>
+          <button class="button button-primary cv-analyze-button" id="cvAnalyzeButton" type="button" disabled>
+            <span class="model-icon detail-ai-icon" aria-hidden="true">AI</span>
+            Analyse CV locally
+          </button>
+        </div>
+
+        <div class="cv-result" id="cvResult" hidden></div>
+      </section>
+    </div>
+
+    <div class="toast-region" id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

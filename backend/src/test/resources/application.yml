@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:mapploy;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  ai:
+    ollama:
+      base-url: http://127.0.0.1:11434
+      chat:
+        options:
+          model: gemma3:4b
+
+mapploy:
+  sync:
+    enabled: false
+    on-startup: false
