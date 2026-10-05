@@ -4,7 +4,7 @@
 
 Mapploy is a student prototype that brings employer job feeds, an interactive map and local AI analysis into one workspace. It focuses on vacancies in Bremen, Hamburg and remote roles, with filters for different professional interests.
 
-![Mapploy job search with an interactive map and evidence-based job details](docs/images/job-map.png)
+![Mapploy job search with a 3D map of Bremen and evidence-based job details](docs/images/job-map-3d.png)
 
 ## Features
 
@@ -21,7 +21,11 @@ Mapploy is a student prototype that brings employer job feeds, an interactive ma
   <img src="docs/images/cv-review.png" alt="Local CV completeness checklist using a fictional demo CV" width="360">
 </p>
 
-Screenshots were captured on 3 October 2026. Vacancies and counts are snapshots; the CV example is fictional. See [screenshot notes](docs/images/README.md).
+### Feature overview
+
+[![Mapploy feature overview: interests, map, job analysis, CV upload, checklist and requirement matching](docs/images/feature-overview.jpg)](docs/images/feature-overview.jpg)
+
+The 3D screenshot was supplied for this portfolio; the feature captures are from 3 October 2026. Vacancies and counts are snapshots; the CV example is fictional. See [screenshot notes](docs/images/README.md).
 
 ## Technology
 
